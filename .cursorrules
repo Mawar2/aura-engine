@@ -1,0 +1,155 @@
+# AURA Development Rules for Cursor IDE
+
+You are working on AURA, a Jarvis-like AI assistant for M1 Mac.
+
+## Project Context
+- Building a voice-controlled AI that can develop software
+- Runs 100% locally on Apple Silicon
+- Uses Swift 5.9+ with modern concurrency
+- Modular architecture with Swift Package Manager
+- Voice-first interaction like Jarvis from Iron Man
+
+## Code Style Rules
+- Use async/await for all asynchronous operations
+- Follow protocol-oriented design principles
+- Every public API needs documentation comments
+- Use descriptive variable names (no single letters except in loops)
+- Prefer `let` over `var` when possible
+- Use early returns to reduce nesting
+- Group related functionality with `// MARK: -` comments
+
+## Swift-Specific Patterns
+```swift
+// Error handling pattern
+enum AURAError: LocalizedError {
+    case invalidInput(String)
+    case processingFailed(reason: String)
+    
+    var errorDescription: String? {
+        switch self {
+        case .invalidInput(let message):
+            return "Invalid input: \(message)"
+        case .processingFailed(let reason):
+            return "Processing failed: \(reason)"
+        }
+    }
+}
+
+// Async function pattern
+func processVoiceCommand(_ command: String) async throws -> CommandResult {
+    // Implementation
+}
+
+// Protocol pattern
+protocol AURAModule {
+    associatedtype Configuration
+    associatedtype Output
+    
+    func initialize(with config: Configuration) async throws
+    func process() async throws -> Output
+}
+
+// Actor pattern for thread-safe components
+actor VoiceSessionManager {
+    private var activeSessions: [UUID: VoiceSession] = [:]
+    
+    func createSession() -> VoiceSession {
+        // Implementation
+    }
+}
+```
+
+## Testing Requirements
+- Write tests first (TDD approach) - ALWAYS write the test before the implementation
+- Use Quick/Nimble for BDD-style tests
+- Minimum 90% coverage for new code, aim for 100%
+- Test file naming: [Feature]Tests.swift
+- Mock external dependencies using protocols
+- Test structure:
+  ```swift
+  describe("FeatureName") {
+      context("when condition") {
+          it("should expected behavior") {
+              // Test implementation
+          }
+      }
+  }
+  ```
+- Include edge cases and error scenarios
+- Performance tests for critical paths
+
+## Architecture Guidelines
+- Each module has single responsibility
+- Communicate via protocols, not concrete types
+- Dependency injection over singletons
+- Keep business logic separate from UI/IO
+- Use the Coordinator pattern for navigation
+- Follow Clean Architecture principles:
+  - Entities (core business logic)
+  - Use Cases (application business rules)
+  - Interface Adapters (controllers, presenters)
+  - Frameworks & Drivers (UI, DB, external interfaces)
+- Prefer composition over inheritance
+- Use actors for concurrent state management
+
+## Performance Considerations
+- This runs on-device, optimize for memory usage
+- Leverage M1's unified memory architecture
+- Use structured concurrency for parallel tasks
+- Profile before optimizing
+- Specific optimizations:
+  - Use `@TaskLocal` for context propagation
+  - Leverage Neural Engine for ML tasks via Core ML
+  - Use Metal for parallel computations when applicable
+  - Implement lazy loading for large data sets
+  - Cache computed results appropriately
+  - Use value types (structs) where possible to reduce heap allocations
+- Voice processing must maintain <100ms latency
+- Memory budget: Keep each agent under 500MB
+
+## When Writing Code
+1. **Consider testability first**
+   - Can this be easily mocked?
+   - Is the interface clear and minimal?
+   - Are dependencies injected?
+
+2. **Write clear, self-documenting code**
+   - Use meaningful names that explain intent
+   - Add comments for "why", not "what"
+   - Keep functions under 20 lines
+
+3. **Handle errors gracefully**
+   - Never use `try!` or `force unwrap` in production code
+   - Provide meaningful error messages
+   - Log errors appropriately
+
+4. **Add logging for debugging**
+   - Use os.log with appropriate categories
+   - Include context in log messages
+   - Use different log levels appropriately
+
+5. **Keep functions small and focused**
+   - Single responsibility per function
+   - Extract complex logic into well-named helpers
+   - Prefer pure functions where possible
+
+## Voice-Specific Guidelines
+- All voice operations must be cancellable
+- Provide visual/audio feedback for voice commands
+- Handle background noise and unclear speech
+- Support interrupt/correction during processing
+- Maintain conversation context across interactions
+
+## AI Agent Guidelines
+- Agents communicate via structured messages
+- Each agent maintains its own state
+- Use event sourcing for agent actions
+- Implement circuit breakers for agent failures
+- Log all agent decisions for debugging
+
+## Security & Privacy
+- Never log sensitive user data
+- All processing happens on-device
+- Use Keychain for any credentials
+- Implement proper sandboxing
+- No network calls without explicit user consent

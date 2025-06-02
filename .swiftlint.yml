@@ -1,0 +1,49 @@
+# .swiftlint.yml
+disabled_rules:
+  - trailing_whitespace
+  - line_length
+
+opt_in_rules:
+  - empty_count
+  - closure_spacing
+  - contains_over_first_not_nil
+  - discouraged_object_literal
+  - explicit_init
+  - first_where
+  - implicit_return
+  - joined_default_parameter
+  - last_where
+  - legacy_multiple
+  - modifier_order
+  - overridden_super_call
+  - prohibited_super_call
+  - redundant_nil_coalescing
+  - redundant_type_annotation
+  - single_test_class
+  - sorted_first_last
+  - unneeded_parentheses_in_closure_argument
+
+excluded:
+  - .build
+  - Packages
+  - Tests
+
+identifier_name:
+  min_length: 2
+  max_length: 40
+
+type_body_length:
+  warning: 300
+  error: 400
+
+file_length:
+  warning: 500
+  error: 1000
+
+function_body_length:
+  warning: 40
+  error: 100
+
+type_name:
+  min_length: 3
+  max_length: 40
