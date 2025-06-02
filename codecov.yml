@@ -1,0 +1,22 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 90%
+        threshold: 5%
+    patch:
+      default:
+        target: 90%
+
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
+  require_changes: true
+
+ignore:
+  - "Tests/*"
+  - "*.test.swift"
+  - "*.spec.swift"
+  - "Package.swift"
+  - ".build/*"
+  - "Sources/AURA/main.swift" 
