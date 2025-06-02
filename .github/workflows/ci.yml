@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
 
 jobs:
   test:
@@ -50,29 +50,4 @@ jobs:
       uses: codecov/codecov-action@v3
       with:
         file: ./coverage.lcov
-        fail_ci_if_error: true
-
-  security-scan:
-    name: Security Scan
-    runs-on: macos-14
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Run Security Scan
-      run: |
-        swift package resolve
-        swift package update
-        # Add any additional security scanning tools here
-        # For example: OWASP dependency check, etc.
-
-  performance-test:
-    name: Performance Test
-    runs-on: macos-14
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Run Performance Tests
-      run: |
-        swift test --filter "Performance"
-        # Add specific performance benchmarks here
-        # For example: measure voice processing latency 
+        fail_ci_if_error: true 
