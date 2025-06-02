@@ -9,9 +9,11 @@ let package = Package(
     products: [
         .executable(name: "aura", targets: ["AURA"]),
         .library(name: "AURACore", targets: ["AURACore"]),
+        .library(name: "VoiceEngine", targets: ["VoiceEngine"])
     ],
     dependencies: [
-        // We'll add dependencies as needed
+        .package(url: "https://github.com/Quick/Quick.git", from: "7.6.2"),
+        .package(url: "https://github.com/Quick/Nimble.git", from: "13.7.1")
     ],
     targets: [
         .executableTarget(
@@ -22,9 +24,17 @@ let package = Package(
             name: "AURACore",
             dependencies: []
         ),
+        .target(
+            name: "VoiceEngine",
+            dependencies: ["AURACore"]
+        ),
         .testTarget(
             name: "AURACoreTests",
             dependencies: ["AURACore"]
         ),
+        .testTarget(
+            name: "VoiceEngineTests",
+            dependencies: ["VoiceEngine", "Quick", "Nimble"]
+        )
     ]
 )
